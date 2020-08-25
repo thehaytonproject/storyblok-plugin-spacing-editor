@@ -6,20 +6,20 @@
         <div class="fs-spacing-editor__center">
           <select name="mt" v-model="model.mt">
             <option
-              v-for="opt in selectOptions"
-              :key="model._uid + '_mt_' + opt.id"
-              :value="opt.value"
-            >{{ opt.name }}</option>
+              v-for="key in Object.keys(options)"
+              :key="model._uid + '_mt_' + key"
+              :value="key"
+            >{{ options[key] }}</option>
           </select>
         </div>
         <div class="fs-spacing-editor__flex">
           <div>
             <select name="ml" v-model="model.ml">
               <option
-                v-for="opt in selectOptions"
-                :key="model._uid + '_ml_' + opt.id"
-                :value="opt.value"
-              >{{ opt.name }}</option>
+                v-for="key in Object.keys(options)"
+                :key="model._uid + '_ml_' + key"
+                :value="key"
+              >{{ options[key] }}</option>
             </select>
           </div>
           <div class="fs-spacing-editor__bounds" style="background: #fff;">
@@ -27,60 +27,60 @@
             <div class="fs-spacing-editor__center">
               <select name="pt" v-model="model.pt">
                 <option
-                  v-for="opt in selectOptions"
-                  :key="model._uid + '_pt_' + opt.id"
-                  :value="opt.value"
-                >{{ opt.name }}</option>
+                  v-for="key in Object.keys(options)"
+                  :key="model._uid + '_pt_' + key"
+                  :value="key"
+                >{{ options[key] }}</option>
               </select>
             </div>
             <div class="fs-spacing-editor__flex">
               <div>
                 <select name="pl" v-model="model.pl">
                   <option
-                    v-for="opt in selectOptions"
-                    :key="model._uid + '_pl_' + opt.id"
-                    :value="opt.value"
-                  >{{ opt.name }}</option>
+                    v-for="key in Object.keys(options)"
+                    :key="model._uid + '_pl_' + key"
+                    :value="key"
+                  >{{ options[key] }}</option>
                 </select>
               </div>
               <div class="fs-spacing-editor__center" style="padding: 1em;">Content</div>
               <div>
                 <select name="pr" v-model="model.pr">
                   <option
-                    v-for="opt in selectOptions"
-                    :key="model._uid + '_pr_' + opt.id"
-                    :value="opt.value"
-                  >{{ opt.name }}</option>
+                    v-for="key in Object.keys(options)"
+                    :key="model._uid + '_pr_' + key"
+                    :value="key"
+                  >{{ options[key] }}</option>
                 </select>
               </div>
             </div>
             <div class="fs-spacing-editor__center">
               <select name="pb" v-model="model.pb">
                 <option
-                  v-for="opt in selectOptions"
-                  :key="model._uid + '_pb_' + opt.id"
-                  :value="opt.value"
-                >{{ opt.name }}</option>
+                  v-for="key in Object.keys(options)"
+                  :key="model._uid + '_pb_' + key"
+                  :value="key"
+                >{{ options[key] }}</option>
               </select>
             </div>
           </div>
           <div>
             <select name="mr" v-model="model.mr">
               <option
-                v-for="opt in selectOptions"
-                :key="model._uid + '_mr_' + opt.id"
-                :value="opt.value"
-              >{{ opt.name }}</option>
+                v-for="key in Object.keys(options)"
+                :key="model._uid + '_mr_' + key"
+                :value="key"
+              >{{ options[key] }}</option>
             </select>
           </div>
         </div>
         <div class="fs-spacing-editor__center">
           <select name="mb" v-model="model.mb">
             <option
-              v-for="opt in selectOptions"
-              :key="model._uid + '_mb_' + opt.id"
-              :value="opt.value"
-            >{{ opt.name }}</option>
+              v-for="key in Object.keys(options)"
+              :key="model._uid + '_mb_' + key"
+              :value="key"
+            >{{ options[key] }}</option>
           </select>
         </div>
       </div>
@@ -99,38 +99,18 @@ export default {
         title: "Spacing Editor",
         description:
           "Allows the user to set top, right, bottom, and left values for padding and margin.",
-        mt: null,
-        mr: null,
-        mb: null,
-        ml: null,
-        pt: null,
-        pr: null,
-        pb: null,
-        pl: null,
       };
     },
     async pluginCreated() {
-      if (!this.schema.datasource_slug || !this.schema.datasource_slug.length)
-        return;
-
-      const endpoint = `cdn/datasource_entries?token=${this.token}&datasource=${this.schema.datasource_slug}`;
-
-      try {
-        const response = await this.api.get(endpoint);
-        this.options = response.data.datasource_entries;
-      } catch (err) {
-        console.log(
-          "Could not parse datasource_entries for spacing-editor plugin",
-          err
-        );
+      if (
+        this.schema.source === "internal" &&
+        this.schema.datasource_slug &&
+        this.schema.datasource_slug.length
+      ) {
+        const data = await fetchOptionsFromDataSource(this);
+        const opts = {};
+        this.options = data.map((x) => (opts[x.value] = x.name));
       }
-    },
-  },
-  computed: {
-    selectOptions() {
-      return this.options.length
-        ? this.options
-        : [{ id: null, value: null, name: null }];
     },
   },
   watch: {
@@ -142,6 +122,12 @@ export default {
     },
   },
 };
+
+async function fetchOptionsFromDataSource(context) {
+  const endpoint = `cdn/datasource_entries?token=${context.token}&datasource=${context.schema.datasource_slug}&per_page=1000`;
+  const response = await context.api.get(endpoint);
+  return response.data.datasource_entries;
+}
 </script>
 <style>
 .fs-spacing-editor {
