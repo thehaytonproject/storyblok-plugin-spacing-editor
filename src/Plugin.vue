@@ -5,82 +5,108 @@
         <div class="fs-spacing-editor__label">Margin</div>
         <div class="fs-spacing-editor__center">
           <select name="mt" v-model="model.mt">
+            <option></option>
             <option
-              v-for="[key, value] in Object.entries(options)"
-              :key="model._uid + '_mt_' + value"
-              :value="value"
-            >{{ key }}</option>
+              v-for="opt in options"
+              :key="model._uid + '_mt_' + opt.id"
+              :value="opt.value"
+            >
+              {{ opt.name }}
+            </option>
           </select>
         </div>
         <div class="fs-spacing-editor__flex">
           <div>
             <select name="ml" v-model="model.ml">
+              <option></option>
               <option
-                v-for="[key, value] in Object.entries(options)"
-                :key="model._uid + '_ml_' + value"
-                :value="value"
-              >{{ key }}</option>
+                v-for="opt in options"
+                :key="model._uid + '_ml_' + opt.id"
+                :value="opt.value"
+              >
+                {{ opt.name }}
+              </option>
             </select>
           </div>
-          <div class="fs-spacing-editor__bounds" style="background: #fff;">
+          <div class="fs-spacing-editor__bounds" style="background: #fff">
             <div class="fs-spacing-editor__label">Padding</div>
             <div class="fs-spacing-editor__center">
               <select name="pt" v-model="model.pt">
+                <option></option>
                 <option
-                  v-for="[key, value] in Object.entries(options)"
-                  :key="model._uid + '_pt_' + value"
-                  :value="value"
-                >{{ key }}</option>
+                  v-for="opt in options"
+                  :key="model._uid + '_pt_' + opt.id"
+                  :value="opt.value"
+                >
+                  {{ opt.name }}
+                </option>
               </select>
             </div>
             <div class="fs-spacing-editor__flex">
               <div>
                 <select name="pl" v-model="model.pl">
+                  <option></option>
                   <option
-                    v-for="[key, value] in Object.entries(options)"
-                    :key="model._uid + '_pl_' + value"
-                    :value="value"
-                  >{{ key }}</option>
+                    v-for="opt in options"
+                    :key="model._uid + '_pl_' + opt.id"
+                    :value="opt.value"
+                  >
+                    {{ opt.name }}
+                  </option>
                 </select>
               </div>
-              <div class="fs-spacing-editor__center" style="padding: 1em;">Content</div>
+              <div class="fs-spacing-editor__center" style="padding: 1em">
+                Content
+              </div>
               <div>
                 <select name="pr" v-model="model.pr">
+                  <option></option>
                   <option
-                    v-for="[key, value] in Object.entries(options)"
-                    :key="model._uid + '_pr_' + value"
-                    :value="value"
-                  >{{ key }}</option>
+                    v-for="opt in options"
+                    :key="model._uid + '_pr_' + opt.id"
+                    :value="opt.value"
+                  >
+                    {{ opt.name }}
+                  </option>
                 </select>
               </div>
             </div>
             <div class="fs-spacing-editor__center">
               <select name="pb" v-model="model.pb">
+                <option></option>
                 <option
-                  v-for="[key, value] in Object.entries(options)"
-                  :key="model._uid + '_pb_' + value"
-                  :value="value"
-                >{{ key }}</option>
+                  v-for="opt in options"
+                  :key="model._uid + '_pb_' + opt.id"
+                  :value="opt.value"
+                >
+                  {{ opt.name }}
+                </option>
               </select>
             </div>
           </div>
           <div>
             <select name="mr" v-model="model.mr">
+              <option></option>
               <option
-                v-for="[key, value] in Object.entries(options)"
-                :key="model._uid + '_mr_' + value"
-                :value="value"
-              >{{ key }}</option>
+                v-for="opt in options"
+                :key="model._uid + '_mr_' + opt.id"
+                :value="opt.value"
+              >
+                {{ opt.name }}
+              </option>
             </select>
           </div>
         </div>
         <div class="fs-spacing-editor__center">
           <select name="mb" v-model="model.mb">
+            <option></option>
             <option
-              v-for="[key, value] in Object.entries(options)"
-              :key="model._uid + '_mb_' + value"
-              :value="value"
-            >{{ key }}</option>
+              v-for="opt in options"
+              :key="model._uid + '_mb_' + opt.id"
+              :value="opt.value"
+            >
+              {{ opt.name }}
+            </option>
           </select>
         </div>
       </div>
@@ -107,9 +133,7 @@ export default {
         this.schema.datasource_slug &&
         this.schema.datasource_slug.length
       ) {
-        const data = await fetchOptionsFromDataSource(this);
-        const opts = {};
-        this.options = data.map((x) => (opts[x.value] = x.name));
+        this.options = await fetchOptionsFromDataSource(this);
       }
     },
   },
